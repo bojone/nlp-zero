@@ -331,7 +331,7 @@ class Word_Finder:
         pairs = {i: j for i, j in pairs.items() if j > log_min_proba}
 
         if remove_weak_pairs:
-            self.pairs.update({i: j for i, j in self.pairs.items() if i in pairs})
+            self.pairs = defaultdict(int, {i: j for i, j in self.pairs.items() if i in pairs})
 
         pairs = {
             i: j
