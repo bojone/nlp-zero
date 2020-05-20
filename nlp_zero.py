@@ -356,11 +356,11 @@ class Word_Finder:
 
         logger.info(u'共处理了 %s 个句子' % (n + 1))
         log_total_words = log(sum(self.words.values()))
-        self.words = {
+        self.words.update({
             i: j
             for i, j in self.words.items()
             if log(j) - log_total_words > log_min_proba
-        }
+        })
 
         tokenizer = self.export_tokenizer()
         total = len(self.words)
