@@ -50,7 +50,7 @@ class Trie:
         self.total_items = 0  # 总词频
         self.log_total_items = log(self.total_items)  # 对数总词频
         if isinstance(path_or_trie, basestring):  # 从文件中加载，文件的每一行是“词 词频
-            with open(path_or_trie) as f:
+            with open(path_or_trie, 'r', encoding='utf-8') as f:
                 for l in f:
                     l = re.split(' +', l.strip())
                     if is_python2:
