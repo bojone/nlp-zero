@@ -21,7 +21,6 @@ import logging
 from itertools import chain
 from collections import defaultdict, Iterable
 from sys import version_info
-import os
 
 is_python2 = (version_info.major == 2)
 
@@ -29,6 +28,7 @@ if not is_python2:
     basestring = str
 
 run_path = os.path.split(os.path.realpath(__file__))[0]
+
 
 def log(x):
     if x == 0:
@@ -57,7 +57,7 @@ class Trie:
                         self.__setitem__(l[0].decode('utf-8'), int(l[1]))
                     else:
                         self.__setitem__(l[0], int(l[1]))
-        elif path_or_trie != None:
+        elif path_or_trie is not None:
             self.update(path_or_trie)
 
     def __setitem__(self, item, count):
@@ -101,7 +101,7 @@ class Trie:
             del _[self.end]
 
     def __iter__(self, _=None):  # 以(词, 词频)的形式逐一返回所有记录
-        if _ == None:
+        if _ is None:
             _ = self.dic
 
         for c in _:
@@ -216,7 +216,7 @@ class Tokenizer:
     """
 
     def __init__(self, word_trie=None):
-        if word_trie == None:
+        if word_trie is None:
             self.words = Trie(run_path + '/dic.txt')
         else:
             self.words = word_trie
@@ -405,18 +405,18 @@ class Template:
                 self.add(w)
 
     def add(self, value):
-        if value != None:
+        if value is not None:
             self.words.append(value)
             self.last = value
             self.length += 1
-        elif (not self.words) or self.words[-1] != None:
+        elif (not self.words) or self.words[-1] is not None:
             self.words.append(value)
 
     def is_trivial(self):
         """是否平凡模版，单个词且两边都是占位符的模版是平凡的。
         """
-        return (len(self.words) == 3 and self.words[0] == None
-                and self.words[2] == None)
+        return (len(self.words) == 3 and self.words[0] is None
+                and self.words[2] is None)
 
     def __iter__(self):
         for w in self.words:
@@ -658,7 +658,7 @@ class SentTree:
         k = 0
         s = ''
         for w in self.template:
-            if w == None:
+            if w is None:
                 strings.append(self.modules[k].plot('|     ' + prefix))
                 s += '(' + self.modules[k].content + ')'
                 k += 1
