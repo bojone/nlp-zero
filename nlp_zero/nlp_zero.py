@@ -615,8 +615,7 @@ class XTrie(Trie):
             # 连续几个词都可以匹配上占位符，但形式上只算一个。
             # 反过来说，就是前面已经匹配了一个占位符，后面可以反复匹配占位符，trie_dic不用递归
             if (not matching  # matching为空，即为起点
-                    or matching[-1] != out_start + in_start  # 这意味着前面匹配了占位符
-                ):
+                    or matching[-1] != out_start + in_start):  # 这意味着前面匹配了占位符
                 if self.end in trie_dic:  # 如果完整匹配一个模版
                     output[out_start, out_start + in_start + 1][
                         matching] = trie_dic[self.end][1]
