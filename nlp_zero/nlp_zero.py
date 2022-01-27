@@ -21,7 +21,6 @@ import logging
 from itertools import chain
 from collections import defaultdict, Iterable
 from sys import version_info
-import os
 
 is_python2 = (version_info.major == 2)
 
@@ -29,6 +28,7 @@ if not is_python2:
     basestring = str
 
 run_path = os.path.split(os.path.realpath(__file__))[0]
+
 
 def log(x):
     if x == 0:
@@ -50,14 +50,14 @@ class Trie:
         self.total_items = 0  # 总词频
         self.log_total_items = log(self.total_items)  # 对数总词频
         if isinstance(path_or_trie, basestring):  # 从文件中加载，文件的每一行是“词 词频
-            with open(path_or_trie) as f:
+            with open(path_or_trie, 'r', encoding='utf-8') as f:
                 for l in f:
                     l = re.split(' +', l.strip())
                     if is_python2:
                         self.__setitem__(l[0].decode('utf-8'), int(l[1]))
                     else:
                         self.__setitem__(l[0], int(l[1]))
-        elif path_or_trie != None:
+        elif path_or_trie is not None:
             self.update(path_or_trie)
 
     def __setitem__(self, item, count):
@@ -101,7 +101,7 @@ class Trie:
             del _[self.end]
 
     def __iter__(self, _=None):  # 以(词, 词频)的形式逐一返回所有记录
-        if _ == None:
+        if _ is None:
             _ = self.dic
 
         for c in _:
@@ -216,7 +216,7 @@ class Tokenizer:
     """
 
     def __init__(self, word_trie=None):
-        if word_trie == None:
+        if word_trie is None:
             self.words = Trie(run_path + '/dic.txt')
         else:
             self.words = word_trie
@@ -405,18 +405,18 @@ class Template:
                 self.add(w)
 
     def add(self, value):
-        if value != None:
+        if value is not None:
             self.words.append(value)
             self.last = value
             self.length += 1
-        elif (not self.words) or self.words[-1] != None:
+        elif (not self.words) or self.words[-1] is not None:
             self.words.append(value)
 
     def is_trivial(self):
         """是否平凡模版，单个词且两边都是占位符的模版是平凡的。
         """
-        return (len(self.words) == 3 and self.words[0] == None
-                and self.words[2] == None)
+        return (len(self.words) == 3 and self.words[0] is None
+                and self.words[2] is None)
 
     def __iter__(self):
         for w in self.words:
@@ -615,8 +615,7 @@ class XTrie(Trie):
             # 连续几个词都可以匹配上占位符，但形式上只算一个。
             # 反过来说，就是前面已经匹配了一个占位符，后面可以反复匹配占位符，trie_dic不用递归
             if (not matching  # matching为空，即为起点
-                    or matching[-1] != out_start + in_start  # 这意味着前面匹配了占位符
-                ):
+                    or matching[-1] != out_start + in_start):  # 这意味着前面匹配了占位符
                 if self.end in trie_dic:  # 如果完整匹配一个模版
                     output[out_start, out_start + in_start + 1][
                         matching] = trie_dic[self.end][1]
@@ -658,7 +657,7 @@ class SentTree:
         k = 0
         s = ''
         for w in self.template:
-            if w == None:
+            if w is None:
                 strings.append(self.modules[k].plot('|     ' + prefix))
                 s += '(' + self.modules[k].content + ')'
                 k += 1
